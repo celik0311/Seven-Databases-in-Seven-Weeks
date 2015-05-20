@@ -1,0 +1,29 @@
+---
+
+- hosts: all
+  gather_facts: no
+  sudo: true
+  remote_user: vagrant
+  vars:
+
+  tasks:
+    - name: add link to repo
+      template:
+        src=templates/pgdg.j2
+        dest=/etc/apt/sources.list.d/pgdg.list
+
+    - name: download postgre
+      get_url:
+        url=https://www.postgresql.org/media/keys/ACCC4CF8.asc
+        dest=/tmp
+        force=yes
+
+    - name: get key
+      apt_key:
+        url=https://www.postgresql.org/media/keys/ACCC4CF8.asc
+        state=present
+
+    - name: update apt cache
+      apt:
+        update_cache=yes
+
